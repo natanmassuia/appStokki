@@ -12,6 +12,18 @@ dist
 dist-ssr
 *.local
 
+# Lock files (keep only package-lock.json for npm)
+bun.lockb
+yarn.lock
+pnpm-lock.yaml
+
+# Database and migration files
+*.sql
+
+# Documentation files
+*.md
+!README.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -22,3 +34,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Temporary files
+*.tmp
+*.temp
+.cache

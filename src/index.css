@@ -2,58 +2,92 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ResellManager Design System - Professional Dark Theme */
+/* AppStokki Design System - Base44 Theme (Light/Dark Adaptive) */
 
 @layer base {
   :root {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
+    /* Light Mode: Base44 Clean Fintech */
+    --background: 210 40% 98%; /* Slate 50 - Pale Gray Background */
+    --foreground: 222.2 84% 4.9%; /* Slate 900 - Dark Text */
 
-    --card: 222 47% 8%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 100%; /* White Cards */
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 222 47% 8%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 160 84% 39%;
+    --primary: 221.2 83.2% 53.3%; /* Blue 600 - Vibrant Primary */
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%; /* Slate 100 */
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 210 40% 96.1%; /* Slate 100 */
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 160 84% 39%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --success: 160 84% 39%;
-    --success-foreground: 210 40% 98%;
-
-    --warning: 38 92% 50%;
-    --warning-foreground: 222 47% 6%;
-
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 160 84% 39%;
+    --border: 214.3 31.8% 91.4%; /* Slate 200 - Subtle Borders */
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 222 47% 6%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 160 84% 39%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222.2 84% 4.9%;
+    --sidebar-primary: 221.2 83.2% 53.3%;
     --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 217 33% 17%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217 33% 17%;
-    --sidebar-ring: 160 84% 39%;
+    --sidebar-accent: 210 40% 96.1%;
+    --sidebar-accent-foreground: 222.2 84% 4.9%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-ring: 221.2 83.2% 53.3%;
 
-    /* Glassmorphism variables */
-    --glass-bg: 222 47% 10% / 0.6;
-    --glass-border: 217 33% 25% / 0.3;
+    --success: 160 84% 39%; /* Emerald */
+    --warning: 38 92% 50%; /* Amber */
+  }
+
+  .dark {
+    /* Dark Mode: Deep Blue/Black Professional */
+    --background: 222.2 84% 4.9%; /* Slate 950 - Deep Background */
+    --foreground: 210 40% 98%; /* Slate 50 - Light Text */
+
+    --card: 217.2 32.6% 17.5%; /* Slate 900 - Card Background */
+    --card-foreground: 210 40% 98%;
+
+    --popover: 217.2 32.6% 17.5%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217.2 91.2% 59.8%; /* Blue 500 - Lighter for Dark Mode */
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%; /* Slate 800 */
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%; /* Slate 800 */
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%; /* Slate 800 - Dark Borders */
+    --input: 217.2 32.6% 17.5%;
+    --ring: 217.2 91.2% 59.8%;
+
+    --sidebar-background: 222.2 84% 4.9%; /* Matches Page BG */
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 217.2 91.2% 59.8%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 217.2 32.6% 17.5%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217.2 32.6% 17.5%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -61,24 +95,23 @@
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    @apply bg-background text-foreground;
   }
 }
 
 @layer components {
+  /* Base44 Card Style - Adaptive */
+  .base44-card {
+    @apply bg-card text-card-foreground border border-border/40 shadow-sm rounded-xl transition-all duration-200;
+  }
+  
   .glass-card {
     @apply bg-card/60 backdrop-blur-xl border border-border/30 shadow-xl;
   }
-
-  .glass-card-hover {
-    @apply glass-card transition-all duration-300 hover:bg-card/80 hover:border-primary/30 hover:shadow-primary/5;
-  }
-
+  /* ... rest of components ... */
   .gradient-primary {
-    @apply bg-gradient-to-r from-primary to-emerald-400;
+    @apply bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-600 dark:to-blue-500;
   }
 
   .gradient-text {
@@ -138,4 +171,20 @@
 
 .recharts-text {
   fill: hsl(var(--muted-foreground));
+}
+
+/* Confetti Animation */
+@keyframes confetti {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.animate-confetti {
+  animation: confetti linear forwards;
 }

@@ -4,12 +4,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
 export interface Profile {
-  id: string;
-  user_id: string;
-  store_name: string | null;
+  id: string;  // id É o user_id (não há coluna user_id separada)
+  full_name: string | null;
+  email: string | null;
   avatar_url: string | null;
-  created_at: string;
-  updated_at: string;
+  store_name: string | null;
 }
 
 export function useProfile() {
@@ -21,10 +20,12 @@ export function useProfile() {
     queryKey: ['profile', user?.id],
     queryFn: async () => {
       if (!user) return null;
+      // IMPORTANTE: profiles.id é o user_id (não há coluna user_id separada)
+      // O schema mostra: id uuid REFERENCES auth.users (id é o user_id)
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('id', user.id)  // CORRIGIDO: usa id, não user_id
         .maybeSingle();
 
       if (error) throw error;
@@ -34,17 +35,30 @@ export function useProfile() {
   });
 
   const updateProfile = useMutation({
-    mutationFn: async (updates: Partial<Pick<Profile, 'store_name' | 'avatar_url'>>) => {
+    mutationFn: async (updates: Partial<Pick<Profile, 'full_name' | 'avatar_url'>>) => {
       if (!user) throw new Error('Usuário não autenticado');
       
+      // CRITICAL: NÃO tenta criar profile manualmente
+      // O trigger handle_new_user cria o profile automaticamente no backend
+      // Apenas atualiza se já existir
       const { data, error } = await supabase
         .from('profiles')
         .update(updates)
-        .eq('user_id', user.id)
+        .eq('id', user.id)  // id é o user_id (PK)
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        // Se o profile não existe, o trigger deveria ter criado
+        // Mas se não existe ainda, apenas retorna null (não cria manualmente)
+        if (error.code === 'PGRST116') {
+          // Profile não existe - o trigger deveria criar, mas pode ainda estar processando
+          // Retorna null em vez de criar manualmente para evitar race condition
+          return null;
+        }
+        throw error;
+      }
+      
       return data;
     },
     onSuccess: () => {

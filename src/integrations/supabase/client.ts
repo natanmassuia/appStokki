@@ -5,13 +5,33 @@ import type { Database } from './types';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
+// Validação das variáveis de ambiente (apenas em desenvolvimento)
+// Logs removidos para não poluir o console - erros são tratados na UI
+if (import.meta.env.DEV) {
+  if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+    // Variáveis não configuradas - será tratado quando tentar usar o cliente
+  }
+}
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
+import { sessionStorageAdapter } from '@/utils/sessionStorage';
+
 export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
-    storage: localStorage,
+    storage: sessionStorageAdapter,
     persistSession: true,
     autoRefreshToken: true,
   }
 });
+
+// Teste de conexão inicial (apenas em desenvolvimento)
+// Erros são tratados silenciosamente para não poluir o console
+if (import.meta.env.DEV && SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY) {
+  supabase.auth.getSession().then(() => {
+    // Conexão testada silenciosamente
+  }).catch(() => {
+    // Erro silencioso - não loga no console
+  });
+}
