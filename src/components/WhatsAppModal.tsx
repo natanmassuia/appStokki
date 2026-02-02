@@ -24,9 +24,10 @@ type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'error';
 interface WhatsAppModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onConnect?: () => void;
 }
 
-export function WhatsAppModal({ open, onOpenChange }: WhatsAppModalProps) {
+export function WhatsAppModal({ open, onOpenChange, onConnect }: WhatsAppModalProps) {
   const { user } = useAuth();
   const { store } = useStore();
   const { settings, updateSettings } = useStoreSettings();
@@ -186,10 +187,8 @@ export function WhatsAppModal({ open, onOpenChange }: WhatsAppModalProps) {
               title: 'WhatsApp conectado!',
               description: 'Sua conta WhatsApp foi conectada com sucesso.',
             });
-            // FECHA O MODAL AUTOMATICAMENTE após 1.5 segundos (tempo para ver o toast)
-            setTimeout(() => {
-              onOpenChange(false);
-            }, 1500);
+            // Notifica o componente pai
+            if (onConnect) onConnect();
           }
         }
         // Busca informações da instância para obter número de telefone

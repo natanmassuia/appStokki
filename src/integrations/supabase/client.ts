@@ -9,7 +9,9 @@ const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 // Logs removidos para não poluir o console - erros são tratados na UI
 if (import.meta.env.DEV) {
   if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
-    // Variáveis não configuradas - será tratado quando tentar usar o cliente
+    console.error("Supabase Environment Variables missing!");
+    console.error("URL:", SUPABASE_URL);
+    console.error("KEY:", SUPABASE_PUBLISHABLE_KEY ? "Set" : "Missing");
   }
 }
 

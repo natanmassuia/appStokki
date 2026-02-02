@@ -39,9 +39,11 @@ import { DateRange } from 'react-day-picker';
 import { exportToCSV } from '@/utils/exportUtils';
 import { useToast } from '@/hooks/use-toast';
 
+import { SupplierForm } from '@/components/suppliers/SupplierForm';
+
 export default function Fornecedores() {
   const { toast } = useToast();
-  const { suppliers, isLoading, createSupplier, updateSupplier, deleteSupplier } = useSuppliers();
+  const { suppliers, isLoading, deleteSupplier } = useSuppliers();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [formData, setFormData] = useState({ id: '', name: '', category: '', phone: '', email: '' });
@@ -131,33 +133,6 @@ export default function Fornecedores() {
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setFormData({ id: '', name: '', category: '', phone: '', email: '' });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.name.trim()) return;
-
-    try {
-      if (isEditMode) {
-        await updateSupplier.mutateAsync({
-          id: formData.id,
-          name: formData.name,
-          category: formData.category,
-          phone: formData.phone,
-          email: formData.email
-        });
-      } else {
-        await createSupplier.mutateAsync({
-          name: formData.name,
-          category: formData.category,
-          phone: formData.phone,
-          email: formData.email
-        });
-      }
-      handleCloseDialog();
-    } catch (error) {
-      // Error handled in hook
-    }
   };
 
   const handleDelete = async () => {
@@ -382,71 +357,12 @@ export default function Fornecedores() {
               Preencha os dados do fornecedor.
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="name">Nome da Empresa / Fornecedor</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Ex: Distribuidora Silva"
-                className="input-glass mt-2"
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="category">Categoria (Opcional)</Label>
-              <Input
-                id="category"
-                value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                placeholder="Ex: Embalagens, Eletrônicos"
-                className="input-glass mt-2"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="phone">Telefone / WhatsApp</Label>
-                <Input
-                  id="phone"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="(00) 00000-0000"
-                  className="input-glass mt-2"
-                />
-              </div>
-              <div>
-                <Label htmlFor="email">Email (Opcional)</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="contato@empresa.com"
-                  className="input-glass mt-2"
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={handleCloseDialog}>
-                Cancelar
-              </Button>
-              <Button
-                type="submit"
-                disabled={createSupplier.isPending || updateSupplier.isPending}
-                className="gradient-primary"
-              >
-                {(createSupplier.isPending || updateSupplier.isPending) ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    Salvando...
-                  </>
-                ) : (
-                  isEditMode ? 'Salvar Alterações' : 'Adicionar Fornecedor'
-                )}
-              </Button>
-            </DialogFooter>
-          </form>
+          <SupplierForm 
+            initialData={isEditMode ? formData : undefined}
+            isEditMode={isEditMode}
+            onSuccess={handleCloseDialog}
+            onCancel={handleCloseDialog}
+          />
         </DialogContent>
       </Dialog>
 
